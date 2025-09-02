@@ -76,11 +76,14 @@
     .invoice-detail .value{ color:#fff; font-weight:600; font-family:'JetBrains Mono', monospace; }
 
     .products-section{ margin-bottom:60px; }
+
+    /*  remove description column from header; now only "Item" and "Price" */
     .products-header{
-      display:grid; grid-template-columns:80px 1fr 120px; gap:20px; padding:20px 30px;
+      display:grid; grid-template-columns:1fr 120px; gap:20px; padding:20px 30px;
       background:var(--tint); border-radius:12px; margin-bottom:20px;
       font-weight:600; text-transform:uppercase; letter-spacing:0.5px; font-size:0.9rem; color:var(--primary-strong);
     }
+
     .product-item{
       display:grid; grid-template-columns:80px 1fr 120px; gap:20px; padding:25px 30px;
       background:rgba(20,20,20,0.85); border-radius:16px; margin-bottom:16px;
@@ -108,11 +111,18 @@
       100%{ transform:translateX(-100%) translateY(-100%) rotate(45deg); }
     }
 
-    .product-details h4{ font-size:1.05rem; font-weight:600; margin-bottom:6px; color:#fff; }
-    .product-details p{ color:var(--muted); font-size:0.9rem; line-height:1.4; }
+    /*  make titles bigger/bolder; removed descriptions entirely */
+    .product-details h4{
+      font-size:clamp(1.15rem, 3.5vw, 1.35rem);
+      font-weight:800;
+      margin-bottom:2px;
+      color:#fff;
+      letter-spacing:-0.01em;
+      line-height:1.35;
+    }
 
     .product-price{
-      font-size:1.2rem; font-weight:700; color:#ffd7de; /* lightened accent */
+      font-size:1.2rem; font-weight:800; color:#ffd7de;
       font-family:'JetBrains Mono', monospace; text-align:right;
     }
 
@@ -125,7 +135,7 @@
     .total-row{ display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid rgba(255,255,255,0.1); }
     .total-row:last-child{ border-bottom:none; padding-top:25px; margin-top:15px; border-top:2px solid var(--border); }
     .total-label{ font-size:1.1rem; font-weight:500; color:#aaa; }
-    .total-amount{ font-size:1.2rem; font-weight:600; color:#fff; font-family:'JetBrains Mono', monospace; }
+    .total-amount{ font-size:1.2rem; font-weight:700; color:#fff; font-family:'JetBrains Mono', monospace; }
     .final-total .total-label{ font-size:1.35rem; font-weight:700; color:var(--primary-strong); text-transform:uppercase; letter-spacing:1px; }
     .final-total .total-amount{
       font-size:2rem; font-weight:800;
@@ -144,18 +154,19 @@
 
     .qr-container{
       display:inline-flex; flex-direction:column; align-items:center; padding:20px; background:rgba(255,255,255,0.96);
-      border-radius:20px; margin-bottom:26px; animation:pulse 2s infinite;
+      border-radius:20px; margin-bottom:26px; animation:pulse 2s infinite; gap:14px;
     }
     @keyframes pulse{
       0%,100%{ box-shadow:0 0 20px rgba(139,30,63,0.28); }
       50%{ box-shadow:0 0 40px rgba(232,93,117,0.45); }
     }
-    .qr-container img{ width:200px; height:200px; border-radius:12px; }
+    .qr-container img{ width:200px; height:200px; border-radius:12px; display:block; }
 
     .download-btn{
       background:linear-gradient(135deg, var(--primary), var(--primary-strong)); color:#fff; border:none;
-      padding:14px 36px; border-radius:50px; font-size:1rem; font-weight:600; cursor:pointer; transition:all .3s ease;
-      text-transform:uppercase; letter-spacing:.5px; position:relative; overflow:hidden;
+      padding:14px 36px; border-radius:50px; font-size:1rem; font-weight:700; cursor:pointer; transition:all .3s ease;
+      text-transform:uppercase; letter-spacing:.5px; position:relative; overflow:hidden; margin-top:10px;
+      min-height:44px; /*  ensure tap target */
     }
     .download-btn::before{
       content:''; position:absolute; inset:0; left:-100%;
@@ -169,11 +180,58 @@
     @media (max-width:768px){
       .container{ padding:20px 15px; }
       .invoice-grid{ grid-template-columns:1fr; gap:30px; padding:30px 20px; }
-      .products-header, .product-item{ grid-template-columns:60px 1fr 100px; gap:15px; padding:20px; }
+      .products-header{ grid-template-columns:1fr 100px; gap:15px; padding:20px; }
+      .product-item{ grid-template-columns:60px 1fr 100px; gap:15px; padding:22px; }
       .product-icon{ width:50px; height:50px; }
       .header h1{ font-size:2.5rem; }
       .total-section, .payment-section{ padding:30px 20px; }
-      .qr-container img{ width:160px; height:160px; }
+      .qr-container img{ width:180px; height:180px; } /* a bit larger on tablets/phones */
+    }
+
+    @media (max-width: 640px){
+      /* Hide header row and stack product items */
+      .products-header{ display:none; }
+
+      .product-item{
+        grid-template-columns:60px 1fr; /* icon + details */
+        gap:12px;
+        padding:20px; /*  more comfortable touch spacing */
+      }
+      /* Move price below details, full width */
+      .product-price{
+        grid-column:1 / -1;
+        text-align:left;
+        margin-top:6px;
+        font-size:1.1rem; /*  slightly larger for readability */
+      }
+
+      /* Make key-value rows wrap nicely */
+      .invoice-detail{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:4px;
+      }
+
+      /* Payment + totals comfort on small phones */
+      .total-section{ padding:26px 18px; }
+      .total-row{ padding:14px 0; }
+      .final-total .total-amount{ font-size:2.1rem; }
+
+      .payment-section{ padding:28px 18px; }
+      .qr-container img{ width:180px; height:180px; } /*  larger QR for easy scan */
+      .download-btn{
+        width:100%;
+        padding:16px 18px; /*  bigger tap target */
+        font-size:1.05rem;
+      }
+    }
+
+    @media (max-width: 400px){
+      .container{ padding:16px 12px; }
+      .header h1{ font-size:2rem; }
+      .total-section, .payment-section{ padding:22px 16px; }
+      .qr-container img{ width:160px; height:160px; } /* still easy to scan but fits small screens */
+      .download-btn{ width:100%; padding:14px 16px; min-height:46px; }
     }
 
     /* Entrance animation */
@@ -219,9 +277,9 @@
     </section>
 
     <section class="products-section loading-animation stagger-3" aria-labelledby="items">
+         
       <div class="products-header" id="items">
         <div>Item</div>
-        <div>Description</div>
         <div>Price</div>
       </div>
 
@@ -231,7 +289,6 @@
         </div>
         <div class="product-details">
           <h4>Honey Singh vs Lil Golu (Thumbnail)</h4>
-          
         </div>
         <div class="product-price">₹200</div>
       </article>
@@ -242,7 +299,6 @@
         </div>
         <div class="product-details">
           <h4>Honey Singh Reaction (Thumbnail)</h4>
-         
         </div>
         <div class="product-price">₹200</div>
       </article>
@@ -253,7 +309,6 @@
         </div>
         <div class="product-details">
           <h4>Marathi Fiancee reacts to Malayalam Rap (Thumbnail)</h4>
-         
         </div>
         <div class="product-price">₹200</div>
       </article>
@@ -274,7 +329,6 @@
         </div>
         <div class="product-details">
           <h4>Calm × Yashraj - IRL Reaction (Thumbnail)</h4>
-          
         </div>
         <div class="product-price">₹200</div>
       </article>
@@ -320,7 +374,7 @@
 
     <footer class="footer">
       <p>Thank you for your business!</p>
-      <p>© 2025 Hithuman. All rights reserved.</p>
+
     </footer>
   </div>
 
@@ -332,18 +386,24 @@
       document.getElementById('currentDate').textContent = format(now);
     }
 
-    // Calculate totals: each product-item has data-price="200"
+    // Calculate totals dynamically from data-price attributes
     function calcTotal(){
       const items = document.querySelectorAll('.product-item');
-      const rate = 200;
       const count = items.length;
-      const total = count * rate;
+      let total = 0;
+      items.forEach((el) => {
+        const priceAttr = el.getAttribute('data-price');
+        const price = priceAttr ? Number(priceAttr) : 0;
+        if (!Number.isNaN(price)) total += price;
+      });
       document.getElementById('itemCount').textContent = String(count);
       document.getElementById('grandTotal').textContent = '₹' + total;
     }
 
     // Download QR (respects CORS)
     function downloadQR(){
+      // Important: CORS must be enabled on the hosting domain of the QR image for canvas rendering and download to work.
+      // If CORS is not enabled, the fallback below will open the image in a new tab instead.
       const src = document.getElementById('qrImage').src;
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
@@ -380,17 +440,10 @@
     document.addEventListener('scroll', () => {
       const scrolled = window.pageYOffset;
       const parallax = document.querySelector('.background-pattern');
-      parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
-    });
-
-    // Lift on hover
-    document.querySelectorAll('.product-item').forEach(item => {
-      item.addEventListener('mouseenter', function(){ this.style.transform='translateY(-5px) scale(1.02)'; });
-      item.addEventListener('mouseleave', function(){ this.style.transform='translateY(0) scale(1)'; });
-    });
+      if (parallax) {
+        parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+      }
+    }); // properly closed
   </script>
 </body>
-
 </html>
-
-
