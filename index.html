@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HITHUMAN - THUMBNAIL DESIGN INVOICE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Color system (3-5 colors total)
+       Primary: Maroon #8b1e3f
+       Accent:  #e85d75
+       Neutrals: #0a0a0a, #ffffff, #888888
+    */
+    :root{
+      --bg: #0a0a0a;
+      --fg: #ffffff;
+      --muted: #888888;
+      --primary: #8b1e3f;
+      --primary-strong: #e85d75;
+      --border: rgba(139, 30, 63, 0.3);
+      --tint: rgba(232, 93, 117, 0.1);
+      --tint-2: rgba(139, 30, 63, 0.12);
+    }
+
+    *{ margin:0; padding:0; box-sizing:border-box; }
+    body{
+      font-family:'Inter', sans-serif;
+      background:var(--bg);
+      color:var(--fg);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+
+    .background-pattern{
+      position:fixed; inset:0;
+      z-index:-1;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(139, 30, 63, 0.16) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(232, 93, 117, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(139, 30, 63, 0.08) 0%, transparent 50%);
+      animation: backgroundShift 20s ease-in-out infinite;
+    }
+    @keyframes backgroundShift{
+      0%,100%{ transform:translateX(0) translateY(0); }
+      50%{ transform:translateX(-20px) translateY(-10px); }
+    }
+
+    .container{ max-width:900px; margin:0 auto; padding:40px 20px; position:relative; }
+
+    .header{ text-align:center; margin-bottom:60px; position:relative; }
+    .header::before{
+      content:''; position:absolute; top:-20px; left:50%; transform:translateX(-50%);
+      width:100px; height:4px; background:linear-gradient(90deg, var(--primary), var(--primary-strong)); border-radius:2px;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+    @keyframes glow{
+      from{ box-shadow:0 0 10px rgba(139,30,63,0.5); }
+      to{ box-shadow:0 0 20px rgba(232,93,117,0.8); }
+    }
+    .header h1{
+      font-size:clamp(2.5rem,5vw,4rem); font-weight:800; text-transform:uppercase; letter-spacing:-0.02em; margin-bottom:10px;
+      background:linear-gradient(135deg, var(--primary), var(--primary-strong));
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .header .subtitle{ font-size:1.1rem; color:var(--muted); font-weight:400; letter-spacing:0.5px; }
+
+    .invoice-grid{
+      display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-bottom:60px; padding:40px;
+      background:rgba(15,15,15,0.8); border-radius:20px; border:1px solid var(--border); backdrop-filter:blur(10px);
+    }
+    .invoice-section h3{
+      font-size:1.2rem; color:var(--primary-strong); margin-bottom:20px; font-weight:600; text-transform:uppercase; letter-spacing:1px;
+    }
+    .invoice-detail{ margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; }
+    .invoice-detail .label{ color:#aaa; font-weight:500; }
+    .invoice-detail .value{ color:#fff; font-weight:600; font-family:'JetBrains Mono', monospace; }
+
+    .products-section{ margin-bottom:60px; }
+    .products-header{
+      display:grid; grid-template-columns:80px 1fr 120px; gap:20px; padding:20px 30px;
+      background:var(--tint); border-radius:12px; margin-bottom:20px;
+      font-weight:600; text-transform:uppercase; letter-spacing:0.5px; font-size:0.9rem; color:var(--primary-strong);
+    }
+    .product-item{
+      display:grid; grid-template-columns:80px 1fr 120px; gap:20px; padding:25px 30px;
+      background:rgba(20,20,20,0.85); border-radius:16px; margin-bottom:16px;
+      border:1px solid rgba(255,255,255,0.08); transition:all .3s ease; position:relative; overflow:hidden;
+    }
+    .product-item::before{
+      content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(139,30,63,0.08), rgba(232,93,117,0.05)); opacity:0; transition:opacity .3s ease;
+    }
+    .product-item:hover{ transform:translateY(-2px); border-color:var(--border); box-shadow:0 10px 30px rgba(139,30,63,0.18); }
+    .product-item:hover::before{ opacity:1; }
+
+    .product-icon{
+      width:60px; height:60px; border-radius:12px; overflow:hidden; background:linear-gradient(135deg, var(--primary), var(--primary-strong));
+      display:flex; align-items:center; justify-content:center;
+      position:relative;
+    }
+    .product-icon::before{
+      content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
+      background:linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform:rotate(45deg); animation:shine 3s infinite;
+    }
+    @keyframes shine{
+      0%{ transform:translateX(-100%) translateY(-100%) rotate(45deg); }
+      50%{ transform:translateX(100%) translateY(100%) rotate(45deg); }
+      100%{ transform:translateX(-100%) translateY(-100%) rotate(45deg); }
+    }
+
+    .product-details h4{ font-size:1.05rem; font-weight:600; margin-bottom:6px; color:#fff; }
+    .product-details p{ color:var(--muted); font-size:0.9rem; line-height:1.4; }
+
+    .product-price{
+      font-size:1.2rem; font-weight:700; color:#ffd7de; /* lightened accent */
+      font-family:'JetBrains Mono', monospace; text-align:right;
+    }
+
+    .total-section{
+      background:rgba(15,15,15,0.9); border-radius:20px; padding:40px; margin-bottom:60px; border:2px solid var(--border);
+      position:relative; overflow:hidden;
+    }
+    .total-section::before{ content:''; position:absolute; inset:0; background:linear-gradient(135deg, var(--tint), rgba(232,93,117,0.06)); }
+    .total-section .content{ position:relative; z-index:1; }
+    .total-row{ display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid rgba(255,255,255,0.1); }
+    .total-row:last-child{ border-bottom:none; padding-top:25px; margin-top:15px; border-top:2px solid var(--border); }
+    .total-label{ font-size:1.1rem; font-weight:500; color:#aaa; }
+    .total-amount{ font-size:1.2rem; font-weight:600; color:#fff; font-family:'JetBrains Mono', monospace; }
+    .final-total .total-label{ font-size:1.35rem; font-weight:700; color:var(--primary-strong); text-transform:uppercase; letter-spacing:1px; }
+    .final-total .total-amount{
+      font-size:2rem; font-weight:800;
+      background:linear-gradient(135deg, var(--primary), var(--primary-strong));
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    }
+
+    .payment-section{
+      text-align:center; background:rgba(20,20,20,0.85); border-radius:24px; padding:50px 40px;
+      border:1px solid var(--border); position:relative; overflow:hidden;
+    }
+    .payment-section::before{ content:''; position:absolute; inset:0; background:radial-gradient(circle at center, var(--tint-2), transparent); }
+    .payment-section .content{ position:relative; z-index:1; }
+    .payment-section h3{ font-size:1.6rem; font-weight:700; color:var(--primary-strong); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; }
+    .payment-section p{ color:var(--muted); margin-bottom:32px; font-size:1.05rem; }
+
+    .qr-container{
+      display:inline-flex; flex-direction:column; align-items:center; padding:20px; background:rgba(255,255,255,0.96);
+      border-radius:20px; margin-bottom:26px; animation:pulse 2s infinite;
+    }
+    @keyframes pulse{
+      0%,100%{ box-shadow:0 0 20px rgba(139,30,63,0.28); }
+      50%{ box-shadow:0 0 40px rgba(232,93,117,0.45); }
+    }
+    .qr-container img{ width:200px; height:200px; border-radius:12px; }
+
+    .download-btn{
+      background:linear-gradient(135deg, var(--primary), var(--primary-strong)); color:#fff; border:none;
+      padding:14px 36px; border-radius:50px; font-size:1rem; font-weight:600; cursor:pointer; transition:all .3s ease;
+      text-transform:uppercase; letter-spacing:.5px; position:relative; overflow:hidden;
+    }
+    .download-btn::before{
+      content:''; position:absolute; inset:0; left:-100%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent); transition:left .5s;
+    }
+    .download-btn:hover::before{ left:100%; }
+    .download-btn:hover{ transform:translateY(-2px); box-shadow:0 10px 30px rgba(139,30,63,0.3); }
+
+    .footer{ text-align:center; margin-top:60px; padding-top:40px; border-top:1px solid rgba(255,255,255,0.1); color:#666; font-size:.9rem; }
+
+    @media (max-width:768px){
+      .container{ padding:20px 15px; }
+      .invoice-grid{ grid-template-columns:1fr; gap:30px; padding:30px 20px; }
+      .products-header, .product-item{ grid-template-columns:60px 1fr 100px; gap:15px; padding:20px; }
+      .product-icon{ width:50px; height:50px; }
+      .header h1{ font-size:2.5rem; }
+      .total-section, .payment-section{ padding:30px 20px; }
+      .qr-container img{ width:160px; height:160px; }
+    }
+
+    /* Entrance animation */
+    .loading-animation{ opacity:0; transform:translateY(30px); animation:fadeInUp .8s ease forwards; }
+    @keyframes fadeInUp{ to{ opacity:1; transform:translateY(0); } }
+    .stagger-1{ animation-delay:.1s; } .stagger-2{ animation-delay:.2s; } .stagger-3{ animation-delay:.3s; }
+    .stagger-4{ animation-delay:.4s; } .stagger-5{ animation-delay:.5s; }
+  </style>
+</head>
+<body>
+  <div class="background-pattern"></div>
+
+  <div class="container">
+    <header class="header loading-animation stagger-1">
+      <h1>THANK YOU, HITHUMAN!</h1>
+      <p class="subtitle">Thumbnail Design Invoice</p>
+    </header>
+
+    <section class="invoice-grid loading-animation stagger-2" aria-labelledby="invoice-details">
+      <div class="invoice-section">
+        <h3 id="invoice-details">Invoice Details</h3>
+        <div class="invoice-detail">
+          <span class="label">Invoice:</span>
+          <span class="value">#HIT-2025-08-01</span>
+        </div>
+        <div class="invoice-detail">
+          <span class="label">Date:</span>
+          <span class="value" id="currentDate"></span>
+        </div>
+      </div>
+
+      <div class="invoice-section" aria-labelledby="bill-to">
+        <h3 id="bill-to">Bill To</h3>
+        <div class="invoice-detail">
+          <span class="label">Client:</span>
+          <span class="value">Hithuman</span>
+        </div>
+        <div class="invoice-detail">
+          <span class="label">Project:</span>
+          <span class="value">YouTube Thumbnails</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="products-section loading-animation stagger-3" aria-labelledby="items">
+      <div class="products-header" id="items">
+        <div>Item</div>
+        <div>Description</div>
+        <div>Price</div>
+      </div>
+
+       Each thumbnail charged at ₹200 
+      <article class="product-item" data-price="200">
+        <div class="product-icon">
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/HoneySInghvsLilGolu.jpg-I80017Wii3taidrsJ9hAcQYctn8kgz.jpeg" alt="Reaction thumbnail with host and two men" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+        </div>
+        <div class="product-details">
+          <h4>Honey Singh vs Lil Golu (Thumbnail)</h4>
+          <p>High-impact reaction-style composition with bold headline.</p>
+        </div>
+        <div class="product-price">₹200</div>
+      </article>
+
+      <article class="product-item" data-price="200">
+        <div class="product-icon">
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/HoneySinghReaction.jpg-z7018bBXa6kmhm4Ka7UFTfb0GCErpJ.jpeg" alt="Two hosts with inset photo on vivid background" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+        </div>
+        <div class="product-details">
+          <h4>Honey Singh Reaction (Thumbnail)</h4>
+          <p>Vivid red/black background with central inset photo.</p>
+        </div>
+        <div class="product-price">₹200</div>
+      </article>
+
+      <article class="product-item" data-price="200">
+        <div class="product-icon">
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/MalayalamRapReaction.jpg-0OVV6Yup9dsjRj6SCp7wCvjZYsmyzA.jpeg" alt="Two smiling subjects on yellow and red background" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+        </div>
+        <div class="product-details">
+          <h4>Malayalam Rap Reaction (Thumbnail)</h4>
+          <p>Bright, playful headline with clean color blocking.</p>
+        </div>
+        <div class="product-price">₹200</div>
+      </article>
+
+      <article class="product-item" data-price="200">
+        <div class="product-icon">
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IkkaFubuIRL.jpg-9d88CK2XevcesBiuRDFqiyNKPcbVwW.jpeg" alt="Two people seated at a restaurant table" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+        </div>
+        <div class="product-details">
+          <h4>Ikka &amp; Fubu IRL (Thumbnail)</h4>
+          <p>Casual dining scene with warm indoor lighting.</p>
+        </div>
+        <div class="product-price">₹200</div>
+      </article>
+
+      <article class="product-item" data-price="200">
+        <div class="product-icon">
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CalmxYashraj.jpg-p6PhtvYn6z0TLAYfPN93VD7vAkybQu.jpeg" alt="Three people enjoying food at a wooden table" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+        </div>
+        <div class="product-details">
+          <h4>Calm × Yashraj (Thumbnail)</h4>
+          <p>Relaxed, daylight restaurant setting.</p>
+        </div>
+        <div class="product-price">₹200</div>
+      </article>
+
+      <article class="product-item" data-price="200">
+        <div class="product-icon">
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/HoneySinghMafia.jpg-MxGQKjVAisyRGXcncIvv0K5T4FiPih.jpeg" alt="Warm indoor dining scene with red lanterns" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+        </div>
+        <div class="product-details">
+          <h4>Honey Singh Mafia (Thumbnail)</h4>
+          <p>Moody, ornate interior with warm highlights.</p>
+        </div>
+        <div class="product-price">₹200</div>
+      </article>
+    </section>
+
+    <section class="total-section loading-animation stagger-4" aria-labelledby="totals">
+      <div class="content">
+        <div class="total-row">
+          <span class="total-label">Items</span>
+          <span class="total-amount" id="itemCount">6</span>
+        </div>
+        <div class="total-row">
+          <span class="total-label">Rate (per item)</span>
+          <span class="total-amount">₹200</span>
+        </div>
+        <div class="total-row final-total" id="grandRow">
+          <span class="total-label">Total Amount</span>
+          <span class="total-amount" id="grandTotal">₹1200</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="payment-section loading-animation stagger-5" aria-labelledby="pay">
+      <div class="content">
+        <h3 id="pay">Scan to Pay</h3>
+        <p>Use any UPI app to scan the QR code and make payment</p>
+        <div class="qr-container">
+          <img id="qrImage" src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/pay-LqMKSH2UOmVzhU4J2ldlD116RtGoZR.png" alt="UPI QR code" />
+          <button class="download-btn" onclick="downloadQR()">Download QR</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Thank you for your business!</p>
+      <p>© 2025 Hithuman. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    // Set current date
+    function setDate(){
+      const now = new Date();
+      const format = (d) => d.toLocaleDateString('en-GB',{ day:'2-digit', month:'2-digit', year:'numeric' });
+      document.getElementById('currentDate').textContent = format(now);
+    }
+
+    // Calculate totals: each product-item has data-price="200"
+    function calcTotal(){
+      const items = document.querySelectorAll('.product-item');
+      const rate = 200;
+      const count = items.length;
+      const total = count * rate;
+      document.getElementById('itemCount').textContent = String(count);
+      document.getElementById('grandTotal').textContent = '₹' + total;
+    }
+
+    // Download QR (respects CORS)
+    function downloadQR(){
+      const src = document.getElementById('qrImage').src;
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function(){
+        canvas.width = img.width; canvas.height = img.height;
+        ctx.drawImage(img,0,0);
+        canvas.toBlob(function(blob){
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'hithuman-upi-qr.png';
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          URL.revokeObjectURL(a.href);
+        }, 'image/png', 0.95);
+      };
+      img.onerror = function(){
+        // Fallback: open in new tab
+        const a = document.createElement('a');
+        a.href = src; a.target = '_blank'; a.rel = 'noopener';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      };
+      img.src = src;
+    }
+
+    // Init effects
+    document.addEventListener('DOMContentLoaded', () => {
+      setDate(); calcTotal();
+      // stagger timing
+      document.querySelectorAll('.loading-animation').forEach((el, i) => el.style.animationDelay = `${i*0.1}s`);
+    });
+
+    // Simple parallax for background
+    document.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const parallax = document.querySelector('.background-pattern');
+      parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+    });
+
+    // Lift on hover
+    document.querySelectorAll('.product-item').forEach(item => {
+      item.addEventListener('mouseenter', function(){ this.style.transform='translateY(-5px) scale(1.02)'; });
+      item.addEventListener('mouseleave', function(){ this.style.transform='translateY(0) scale(1)'; });
+    });
+  </script>
+</body>
+</html>
